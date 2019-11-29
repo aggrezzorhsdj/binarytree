@@ -1,9 +1,8 @@
 export class BinaryNode<T> {
-    private _data: T;
-    private _parent: number;
-    private _children: number;
-    constructor(data: T) {
-        this._data = data;
+    public value: T = null;
+    public left: BinaryNode<T> = null;
+    public right: BinaryNode<T> = null;
+    constructor(value: T) {
+        this.value = value;
     }
 }
-
