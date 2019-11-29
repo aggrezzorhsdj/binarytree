@@ -4,16 +4,19 @@ import construct = Reflect.construct;
 export class BinaryTree<T> {
     protected _root: BinaryNode<T> = null;
     public isEmpty(): boolean {
-        return (typeof this._root == null);
+        return (this._root === null);
     }
     public insert(value: T): void {
         const node: BinaryNode<T> = new BinaryNode<T>(value);
-        this.insertNode(node, this._root);
+        if (this.isEmpty()) {
+            this._root = node;
+        } else {
+            this.insertNode(node, this._root);
+        }
     }
-    protected insertNode(node: BinaryNode<T>, subtree: BinaryNode<T>): any {
-        if (subtree == null) {
+    protected insertNode(node: BinaryNode<T>, subtree: BinaryNode<T>): void {
+        if (subtree === null) {
             subtree = node;
-            console.log(subtree);
         } else {
             if (node.value < subtree.value) {
                 this.insertNode(node, subtree.left);
@@ -21,7 +24,7 @@ export class BinaryTree<T> {
                 this.insertNode(node, subtree.right);
             }
         }
-        return this;
+        console.log(subtree);
     }
     protected delete(value: T): void {
         if (this.isEmpty()) {
@@ -56,6 +59,9 @@ export class BinaryTree<T> {
                 this.deleteNode(node);
             }
         }
+    }
+    public consoleIt(): void {
+        console.log(this._root);
     }
 }
 
