@@ -14,17 +14,18 @@ export class BinaryTree<T> {
             this._root = this.insertNode(node, this._root);
         }
     }
-    protected insertNode(node: BinaryNode<T>, subtree: BinaryNode<T>): void {
+    protected insertNode(node: BinaryNode<T>, subtree: BinaryNode<T>): BinaryNode<T> {
         if (subtree === null) {
             subtree = node;
         } else {
             if (node.value < subtree.value) {
-                this.insertNode(node, subtree.left);
+                subtree.left = this.insertNode(node, subtree.left);
             } else if (node.value > subtree.value) {
-                this.insertNode(node, subtree.right);
+                subtree.right = this.insertNode(node, subtree.right);
             }
         }
-        console.log(subtree);
+        return subtree;
+        // console.log(subtree);
     }
     protected delete(value: T): void {
         if (this.isEmpty()) {
