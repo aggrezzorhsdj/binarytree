@@ -35,7 +35,7 @@ function bundles(watching,babelit){
             .pipe(gulp.dest(paths.destFolder))
 
     }
-    console.log(watching);
+    // console.log(watching);
     if(watching){
         bundler = watchify(bundler);
         bundler.on("update",bundle);
@@ -48,4 +48,4 @@ gulp.task("copy-html", function () {
         .pipe(gulp.dest("dist"));
 });
 
-gulp.task("dev",gulp.series("copy-html"), bundles(false,true));
+gulp.task("dev",gulp.series("copy-html"), bundles(true,true));

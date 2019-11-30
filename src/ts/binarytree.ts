@@ -25,41 +25,50 @@ export class BinaryTree<T> {
             }
         }
         return subtree;
-        // console.log(subtree);
-    }
-    protected delete(value: T): void {
-        if (this.isEmpty()) {
-            throw new Error("Three is empty");
-        }
-        const node = this.findNode(value, this._root);
-        if (node) {
-            this.deleteNode(node);
-        }
     }
     protected findNode(value: T, subtree: BinaryNode<T>): BinaryNode<T> {
+        if (subtree == null) {
+            throw new Error("Node isn't found");
+        }
         if (subtree.value > value) {
-            subtree =  this.findNode(subtree.value, subtree.left);
+            subtree =  this.findNode(value, subtree.left);
         } else if (subtree.value < value) {
-            subtree =  this.findNode(subtree.value, subtree.right);
+            subtree =  this.findNode(value, subtree.right);
+        } else if (subtree.value === value) {
+            subtree = subtree;
         }
         return subtree;
     }
-    protected deleteNode(node: BinaryNode<T>): void {
-        if ((typeof node.left == null) && (typeof node.right == null)) {
-            node = null;
-        } else if (typeof node.left == null) {
-            node = node.right;
-        } else if (typeof node.right == null) {
-            node = node.left;
+    public delete(value: T): void {
+        if (this.isEmpty()) {
+            throw new Error("Three is empty");
+        }
+        const node: BinaryNode<T> = this.findNode(value, this._root);
+        if (node) {
+            this._root = this.deleteNode(node, this._root);
+        }
+    }
+    protected deleteNode(node: BinaryNode<T>, subtree: BinaryNode<T>): BinaryNode<T> {
+        if (subtree == null) {
+            return null;
+        }
+        if (subtree.value > node.value) {
+            subtree.left = this.deleteNode(subtree.left, node);
+        } else if (subtree.value < node.value) {
+            subtree.right = this.deleteNode(subtree.right, node);
         } else {
-            if (typeof node.right.left == null) {
-                node.right.left = node.right;
-                node = node.right;
+            if (subtree.left == null && subtree.right == null) {
+                subtree = null;
             } else {
-                node.value = node.right.left.value;
-                this.deleteNode(node);
+                if (subtree.left == null) {
+                    subtree = subtree.right;
+                }
+                if (subtree.right == null) {
+                    subtree = subtree.left;
+                }
             }
         }
+        return subtree;
     }
     public consoleIt(): void {
         console.log(this._root);
