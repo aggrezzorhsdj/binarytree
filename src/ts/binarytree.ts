@@ -11,7 +11,7 @@ export class BinaryTree<T> {
         if (this.isEmpty()) {
             this._root = node;
         } else {
-            this.insertNode(node, this._root);
+            this._root = this.insertNode(node, this._root);
         }
     }
     protected insertNode(node: BinaryNode<T>, subtree: BinaryNode<T>): void {
