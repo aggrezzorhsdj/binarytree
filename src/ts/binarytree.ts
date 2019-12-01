@@ -92,6 +92,9 @@ export class BinaryTree<T> {
             nodeElement.innerHTML = <string><unknown>subtree.value;
             nodeChildElement.append(this.drawNode(subtree.right));
             nodeElement.append(nodeChildElement);
+        } else {
+            nodeChildElement.append(this.drawNode(subtree.left, subtree.right);
+            nodeElement.append(nodeChildElement);
         }
         return nodeElement;
     }
