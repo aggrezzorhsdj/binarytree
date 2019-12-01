@@ -73,5 +73,27 @@ export class BinaryTree<T> {
     public consoleIt(): void {
         console.log(this._root);
     }
+    public draw(): string {
+        if (this.isEmpty()) {
+            throw new Error("Three is empty");
+        }
+        return <string><unknown>this.drawNode(this._root);
+    }
+    public drawNode(subtree: BinaryNode<T>): HTMLElement {
+        const nodeElement = document.createElement("li");
+        const nodeChildElement = document.createElement("ul");
+        if (subtree.left == null && subtree.right == null) {
+            nodeElement.innerHTML = <string><unknown>subtree.value;
+        } else if (subtree.right == null) {
+            nodeElement.innerHTML = <string><unknown>subtree.value;
+            nodeChildElement.append(this.drawNode(subtree.left));
+            nodeElement.append(nodeChildElement);
+        } else if (subtree.left == null) {
+            nodeElement.innerHTML = <string><unknown>subtree.value;
+            nodeChildElement.append(this.drawNode(subtree.right));
+            nodeElement.append(nodeChildElement);
+        }
+        return nodeElement;
+    }
 }
 

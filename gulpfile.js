@@ -9,43 +9,46 @@ var buffer = require('vinyl-buffer');
 
 var paths = {
     pages: ['src/*.html'],
-    sourceFile: 'src/ts/main.ts',
+    sourceFile: ['src/ts/main.ts'],
     destFile: 'bundle.js',
     destFolder: 'dist/'
 };
 
-var bundler = browserify({
-    entries: paths.sourceFile,
-    cache: {}, packageCache: {}, fullPaths: true, debug: true
-}).plugin(tsify);
-
-function bundles(watching,babelit){
-    if(babelit){
-        bundler = bundler
-            .transform('babelify', {
-                presets: ['es2015'],
-                extensions: ['.ts']
-            })
-    }
-    var bundle = function(){
-        return bundler
-            .bundle()
+function buildBundle(watching){
+    var bundler = browserify({
+        basedir: ".",
+        entries: paths.sourceFile,
+        cache: {}, packageCache: {}, fullPaths: true, debug: true
+    }).plugin(tsify);
+    bundler = bundler.transform('babelify', {presets: ['es2015'],extensions: ['.ts']});
+    function bundle(b){
+        var startMs = Date.now();
+        var db = b.bundle()
             .on('error',function(){})
-            .pipe(source(paths.destFile))
-            .pipe(gulp.dest(paths.destFolder))
-
+            .pipe(source("bundle.js"))
+            .pipe(gulp.dest("dist"))
+        console.log('Updated bundle file in', (Date.now() - startMs) + 'ms');
+        return db;
     }
-    // console.log(watching);
     if(watching){
-        bundler = watchify(bundler);
-        bundler.on("update",bundle);
+        bundler = watchify(bundler)
+            .on("update",function(){
+                bunlde(bundler);
+            });
     }
-    return bundle();
+    return bundle(bundler);
 }
-
+gulp.task("build-ts",function(done){
+    buildBundle(false);
+    done();
+});
+gulp.task("watch-ts",function(done){
+    buildBundle(true);
+    done();
+});
 gulp.task("copy-html", function () {
     return gulp.src(paths.pages)
         .pipe(gulp.dest("dist"));
 });
 
-gulp.task("dev",gulp.series("copy-html"), bundles(true,true));
+gulp.task("release", gulp.parallel("copy-html","build-ts"));
