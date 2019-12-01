@@ -71,5 +71,8 @@ gulp.task("watch-html",function(done){
     done();
 });
 
+// release of project
 gulp.task("release", gulp.parallel("copy-html","build-ts","build-less"));
+
+// development mode for project
 gulp.task("dev", gulp.parallel("watch-html","watch-ts","watch-less"));
